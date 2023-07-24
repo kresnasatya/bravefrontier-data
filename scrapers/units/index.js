@@ -1,8 +1,8 @@
-const { getUnitSeries } = require('./scrapers/list.js');
+import getUnitSeries from './scrapers/list.js';
 const firstMainSeriesUrl = "https://bravefrontierglobal.fandom.com/wiki/Unit_List";
 const firstGlobalExclusiveSeriesUrl = "https://bravefrontierglobal.fandom.com/wiki/Unit_List:7000";
 
-module.exports = async () => {
+export default async () => {
     let mainUnits = await getUnitSeries(firstMainSeriesUrl);
     let exclusiveUnits = await getUnitSeries(firstGlobalExclusiveSeriesUrl);
   

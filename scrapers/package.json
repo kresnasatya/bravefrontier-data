@@ -1,25 +1,23 @@
 {
   "name": "bravefrontier-scrapers",
+  "type": "module",
   "version": "1.0.0",
-  "description": "Scrape Brave Frontier Global Wiki site",
+  "description": "Unofficial scraper Brave Frontier Global Wiki site",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "omniunits:artworks": "node omniunits/artworks.js",
     "omniunits:thumbnails": "node omniunits/thumbnails.js",
-    "raw:omniunits": "node omniunits/raw.js",
-    "raw:dbbs": "node dbbs/raw.js"
+    "omniunits:raw": "node omniunits/raw.js",
+    "dbbs:raw": "node dbbs/raw.js"
   },
-  "author": "Satya Kresna <satyakresna6295@gmail.com>",
+  "author": "Kresna Satya",
   "license": "MIT",
-  "dependencies": {
-    "axios": "^0.24.0",
-    "chalk": "^4.1.2",
-    "cloudinary": "^1.27.1",
-    "dotenv": "^10.0.0",
-    "jsdom": "^18.1.0"
-  },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "linkedom": "^0.15.1"
   }
 }

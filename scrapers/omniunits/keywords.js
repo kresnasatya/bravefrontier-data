@@ -1,4 +1,4 @@
-module.exports = [
+export default [
     "extra action", "evasion", "activates BB/SBB/UBB twice",
     "DoT mitigation", "negate all status ailments",
     "negates all status ailments",

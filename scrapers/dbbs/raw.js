@@ -1,23 +1,27 @@
-const fs = require("fs");
-const fsPromises = fs.promises;
-const path = require('path');
-const { performance } = require('perf_hooks');
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const chalk = require("chalk");
-const axios = require("axios");
+import fs from 'fs';
+import fsPromises from 'fs/promises';
+import path from 'path';
+import { performance } from 'perf_hooks';
+import { parseHTML } from 'linkedom';
+import { fileURLToPath } from 'url';
+import { milisConverter } from '../helper.js';
+import keywords from './keywords.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const outputFile = path.join(__dirname, '..', '..', 'data', 'dbbs', 'raw.json');
-const { milisConverter } = require('../helper.js');
-const sourceUrl = 'https://bravefrontierglobal.fandom.com/wiki/List_of_Units_with_Dual_Brave_Burst';
-const keywords = require('./keywords');
 const omniUnitsFile = path.join(__dirname, '..', '..', 'data', 'omniunits', 'raw.json');
+
+const sourceUrl = 'https://bravefrontierglobal.fandom.com/wiki/List_of_Units_with_Dual_Brave_Burst';
 
 (async () => {
     try {
-        console.log(chalk.yellow.bgBlue(`\n Scraping dbbs start! \n`));
+        console.log(`\n Scraping dbbs start! \n`);
         const t0 = performance.now();
-        const response = await axios.get(sourceUrl);
-        const { document } = (new JSDOM(response.data)).window;
+        const response = await fetch(sourceUrl);
+        const text = await response.text();
+        const { document } = parseHTML(text);
         var table = document.querySelector('table.article-table.article-table-selected');
 
         var rows = Array.from(table.querySelectorAll('tr'));
@@ -84,7 +88,7 @@ const omniUnitsFile = path.join(__dirname, '..', '..', 'data', 'omniunits', 'raw
                 }
             }
             let selectedKeywords = [];
-            dbbDesc = dbb.dbbDesc.toLowerCase();
+            const dbbDesc = dbb.dbbDesc.toLowerCase();
             for (const keyword of keywords) {
                 if (dbbDesc.includes(keyword.toLowerCase())) {
                     selectedKeywords.push(keyword);
@@ -108,10 +112,10 @@ const omniUnitsFile = path.join(__dirname, '..', '..', 'data', 'omniunits', 'raw
             if (err) {
                 console.log(err);
             }
-            console.log(chalk.yellow.bgBlue(`\n Scraping dbbs finish! Success export ${dbbs.length} dbbs to ${outputFile}. \n`));
+            console.log(`\n Scraping dbbs finish! Success export ${dbbs.length} dbbs to ${outputFile}. \n`);
     
             const t1 = performance.now();
-            console.log(chalk.yellow.bgBlue(`\n Process took: ${milisConverter(t1 - t0)}. \n`));
+            console.log(`\n Process took: ${milisConverter(t1 - t0)}. \n`);
         });
     } catch (error) {
         console.log(error);

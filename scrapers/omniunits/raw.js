@@ -1,16 +1,19 @@
-const fs = require("fs");
-const path = require('path');
-const chalk = require("chalk");
-const { performance } = require('perf_hooks');
+import fs from 'fs';
+import path from 'path';
+import { performance } from 'perf_hooks';
+import getOmniUnits from './index.js';
+import { milisConverter } from '../helper.js';
+import { fileURLToPath } from 'url';
 
-const getOmniUnits = require('./index.js');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const outputFile = path.join(__dirname, '..', '..', 'data', 'omniunits', 'raw.json');
-const { milisConverter } = require('../helper.js');
 
 (async () => {
     const t0 = performance.now();
 
-    console.log(chalk.yellow.bgBlue(`\n Scraping of Brave Frontier units started initiated...\n`));
+    console.log(`\n Scraping of Brave Frontier units started initiated...\n`);
     
     const omniUnits = await getOmniUnits();
 
@@ -18,9 +21,9 @@ const { milisConverter } = require('../helper.js');
         if (err) {
             console.log(err);
         }
-        console.log(chalk.yellow.bgBlue(`\n Scraping omni units finish. Success export ${omniUnits.length} units to ${outputFile}. \n`));
+        console.log(`\n Scraping omni units finish. Success export ${omniUnits.length} units to ${outputFile}. \n`);
 
         const t1 = performance.now();
-        console.log(chalk.yellow.bgBlue(`\n Process took: ${milisConverter(t1 - t0)}. \n`));
+        console.log(`\n Process took: ${milisConverter(t1 - t0)}. \n`);
     });
 })();

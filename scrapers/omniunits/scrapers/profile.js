@@ -1,25 +1,20 @@
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const axios = require('axios');
+import { parseHTML } from 'linkedom';
 
-const getUnitBio = (unitLink) => {
-    return new Promise((resolve, reject) => {
-        axios.get(unitLink)
-            .then(response => {
-                return resolve(response.data)
-            })
-            .catch(error => {
-                return reject(error);
-            })
-    })
+const getUnitBio = async (unitLink) => {
+    const response = await fetch(unitLink);
+    if (!response.ok) {
+        throw new Error(`An error has occured: ${response.status}`);
+    }
+    const text = await response.text();
+    return text;
 }
 
-module.exports = async (units) => {
+export default async (units) => {
     try {
         for (const unit of units) {
             console.log(`${unit.id}. ${unit.name}: start get ls, es, bb, sbb, ubb`);
             await getUnitBio(unit.link).then((data) => {
-                const { document } = (new JSDOM(data)).window;
+                const { document } = parseHTML(data);
                 var $skills = document.querySelector('div[style="line-height:1.25;"]');
 
                 var lsName = $skills.querySelector('div[style="padding:3px 12px;white-space:nowrap;"]').textContent.replace('Leader Skill:', '').trim();

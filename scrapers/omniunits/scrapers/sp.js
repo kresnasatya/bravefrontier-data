@@ -1,25 +1,24 @@
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const axios = require('axios');
+import { parseHTML } from 'linkedom';
 
-const getUnitSP = link => {
-    return new Promise((resolve, reject) => {
-        axios.get(link)
-            .then(response => resolve(response.data))
-            .catch(error => reject(error));
-    });
+const getUnitSP = async (link) => {
+    const response = await fetch(link);
+    if (!response.ok) {
+        throw new Error(`An error has occured: ${response.status}`);
+    }
+    const text = await response.text();
+    return text;
 }
 
-module.exports = async (omniUnits) => {
+export default async (omniUnits) => {
     try {
         for (const unit of omniUnits) {
             console.log(`${unit.id}. ${unit.name}: start`);
             await getUnitSP(`${unit.link}/Builds`).then((data) => {
-                const { document } = (new JSDOM(data)).window;
+                const { document } = parseHTML(data);
                 var contents = Array.from(document.querySelectorAll('div[style="float:left; width: 640px; margin: 0 0.5em 0 0.5em;"]'));
 
-                // Remove first index of contents
-                var enhancementsTable = contents.shift();
+                // Get first index of contents
+                var enhancementsTable = contents[0];
                 var enhancementsBody = enhancementsTable.querySelector('div > table:nth-of-type(2) tbody');
                 var enhancementsRows = Array.from(enhancementsBody.querySelectorAll('tr'));
 
@@ -51,9 +50,11 @@ module.exports = async (omniUnits) => {
                 }
                 unit.enhancements = enhancements;
 
+                // Remove the first index of element
+                contents.shift();
                 if (Array.isArray(contents) && contents.length > 0) {
                     var spRecommendation = [];
-                    for (i = 0; i < contents.length; i++) {
+                    for (let i = 0; i < contents.length; i++) {
                         var content = contents[i];
 
                         var body = content.querySelector('table[class="article-table tight"] tbody');
@@ -109,9 +110,9 @@ module.exports = async (omniUnits) => {
                     }
                 }
             })
-                .catch(error => {
-                    console.log(error.response.statusText);
-                })
+            .catch(error => {
+                console.log(error);
+            })
             console.log(`${unit.id}. ${unit.name}: done`);
         }
     } catch (error) {

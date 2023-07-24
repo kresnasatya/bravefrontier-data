@@ -1,7 +1,4 @@
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const chalk = require("chalk");
-const axios = require("axios");
+import { parseHTML } from 'linkedom';
 
 const units = [];
 
@@ -47,23 +44,25 @@ function scrape(document) {
 
 const rootUrl = "https://bravefrontierglobal.fandom.com";
 
-getUnitSeries = async (url) => {
+export default async function getUnitSeries(url) {
     try {
-        const response = await axios.get(url);
-        const { document } = (new JSDOM(response.data)).window;
+        const response = await fetch(url);
+        const text = await response.text();
+        const { document } = parseHTML(text);
 
         scrape(document);
 
         // Recursion start
         const nextElementSibling = document.querySelector('.mw-selflink.selflink').nextElementSibling;
+        let nextPageHref;
         if (nextElementSibling !== null) {
             nextPageHref = nextElementSibling.getAttribute('href');
         } else {
             return units;
         }
 
-        nextUrl = `${rootUrl}${nextPageHref}`;
-        console.log(chalk.cyan(`Scraping next url: ${nextUrl}`));
+        let nextUrl = `${rootUrl}${nextPageHref}`;
+        console.log(`Scraping next url: ${nextUrl}`);
 
         return await getUnitSeries(nextUrl);
         // Recursion end
@@ -71,5 +70,3 @@ getUnitSeries = async (url) => {
         console.error(error);
     }
 }
-
-module.exports = { getUnitSeries };

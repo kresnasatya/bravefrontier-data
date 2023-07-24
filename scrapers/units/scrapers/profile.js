@@ -1,25 +1,20 @@
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-const axios = require('axios');
+import { parseHTML } from 'linkedom';
 
-const getUnitBio = (unitLink) => {
-    return new Promise((resolve, reject) => {
-        axios.get(unitLink)
-            .then(response => {
-                return resolve(response.data)
-            })
-            .catch(error => {
-                return reject(error);
-            })
-    })
+const getUnitBio = async (unitLink) => {
+    const response = await fetch(unitLink);
+    if (!response.ok) {
+        throw new Error(`An error has occured: ${response.status}`);
+    }
+    const text = await response.text();
+    return text;
 }
 
-module.exports = async (units, additional = false) => {
+export default async (units, additional = false) => {
     try {
         for (const unit of units) {
             console.log(`${unit.id}. ${unit.name}: start`);
             await getUnitBio(unit.link).then((data) => {
-                const { document } = (new JSDOM(data)).window;
+                const { document } = parseHTML(data);
                 if (additional) {
                     const rows = Array.from(document.querySelector('table.article-table.tight').querySelectorAll('tr'));
                     for (let index = 0; index < rows.length; index++) {

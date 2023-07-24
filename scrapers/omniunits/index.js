@@ -1,11 +1,11 @@
-const collectUnits = require('../units/index.js');
-const unitProfiles = require('../units/scrapers/profile.js');
-const omniUnitProfiles = require('./scrapers/profile.js');
-const spUnits = require('./scrapers/sp.js');
-const { isJapaneseAndChineseChars } = require('../helper.js');
-const keywords = require('./keywords');
+import collectUnits from '../units/index.js';
+import unitProfiles from '../units/scrapers/profile.js';
+import omniUnitProfiles from './scrapers/profile.js';
+import spUnits from './scrapers/sp.js';
+import { isJapaneseAndChineseChars } from '../helper.js';
+import keywords from './keywords.js';
 
-module.exports = async () => {
+export default async () => {
     try {
         const units = await collectUnits();
 

@@ -1,4 +1,4 @@
-module.exports = [
+export default [
     "100% evasion",
     "80% evasion",
     "OD gauge",
