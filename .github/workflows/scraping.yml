@@ -6,24 +6,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
       with:
-        node-version: '>=16'
+        version: 8
+    - uses: actions/setup-node@v2
+      name: Setup node
+      with:
+        node-version: '>=18'
+        cache: pnpm
     - name: Install dependecies
-      run: cd services && npm ci
+      run: cd services && pnpm install
     - name: Store scraping omni units into raw file
-      run: cd services && npm run raw:omniunits
+      run: cd services && pnpm run omniunits:raw
     - name: Store scrapping dbbs into raw file
-      run: cd services && npm run raw:dbbs
+      run: cd services && pnpm run dbbs:raw
     - name: Upload omniunits thumbnails to Cloudinary
-      run: cd services && npm run omniunits:thumbnails
+      run: cd services && pnpm run omniunits:thumbnails
       env:
         CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
         CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
         CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
     - name: Upload omniunits artworks to Cloudinary
-      run: cd services && npm run omniunits:artworks
+      run: cd services && pnpm run omniunits:artworks
       env:
         CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
         CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
