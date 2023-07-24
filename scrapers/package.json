@@ -17,6 +17,7 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "cloudinary": "^1.38.0",
     "dotenv": "^16.3.1",
     "linkedom": "^0.15.1"
   }
