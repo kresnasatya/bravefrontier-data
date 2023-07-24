@@ -15,6 +15,7 @@ jobs:
       with:
         node-version: '>=18'
         cache: pnpm
+        cache-dependency-path: 'services'
     - name: Install dependecies
       run: cd services && pnpm install
     - name: Store scraping omni units into raw file
