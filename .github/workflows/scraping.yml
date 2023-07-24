@@ -15,21 +15,21 @@ jobs:
       with:
         node-version: '>=18'
         cache: pnpm
-        cache-dependency-path: 'services'
+        cache-dependency-path: 'scrapers'
     - name: Install dependecies
-      run: cd services && pnpm install
+      run: cd scrapers && pnpm install
     - name: Store scraping omni units into raw file
-      run: cd services && pnpm run omniunits:raw
+      run: cd scrapers && pnpm run omniunits:raw
     - name: Store scrapping dbbs into raw file
-      run: cd services && pnpm run dbbs:raw
+      run: cd scrapers && pnpm run dbbs:raw
     - name: Upload omniunits thumbnails to Cloudinary
-      run: cd services && pnpm run omniunits:thumbnails
+      run: cd scrapers && pnpm run omniunits:thumbnails
       env:
         CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
         CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
         CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
     - name: Upload omniunits artworks to Cloudinary
-      run: cd services && pnpm run omniunits:artworks
+      run: cd scrapers && pnpm run omniunits:artworks
       env:
         CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
         CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
