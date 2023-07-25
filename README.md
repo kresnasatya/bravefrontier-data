@@ -10,14 +10,14 @@ This repository contain scraper service and Brave Frontier's Omni Units plus Dua
 
 ```bash
 # Fetch omniunits data
-npm run raw:omniunits
-
-# Fetch dbb data
-npm run raw:dbbs
+npm run omniunits:raw
 
 # Get omniunits artworks
 npm run omniunits:artworks
 
 # Get omniunits thumbnails
 npm run omniunits:thumbnails
+
+# Fetch dbb data
+npm run dbbs:raw
 ```
